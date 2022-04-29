@@ -9,7 +9,7 @@ DayLabel::DayLabel(QWidget* parent) :
     m_nDay = 0;
     labelIcon = new QLabel(this);
     labelIcon->setFixedSize(QSize(12, 12));
-    labelIcon->setPixmap(QPixmap("1.jpg"));
+    labelIcon->setPixmap(QPixmap("1.jpg"));   
     labelIcon->move(0, 0);
     labelIcon->setVisible(false);
 }

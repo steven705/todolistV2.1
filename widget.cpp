@@ -12,6 +12,11 @@ Widget::Widget(QWidget *parent)
 
 
 
+	//这是空语句
+	int i = 0;
+	i = 9;
+	//
+
     //获取当前日期进行显示
     QDateTime dt;
     QDate date;
