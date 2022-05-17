@@ -8,7 +8,7 @@ mySqlConnect::mySqlConnect(QObject *parent) : QObject(parent)
 //连接数据库
 bool mySqlConnect::connect()
 {
-    db = QSqlDatabase::addDatabase("QODBC");
+    db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("47.98.181.12");
     db.setPort(3306);
     db.setDatabaseName("todolist");
