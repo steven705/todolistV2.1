@@ -1,28 +1,22 @@
-﻿#include "widget.h"
+#include "widget.h"
 #include "ui_widget.h"
+#include <QFile>
+#include <QtMultimedia/QMediaPlayer>	// VS向.pro文件添加代码的方式>
+
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
-   
-    init();
-
-
-
-
-	//这是空语句
-	int i = 0;
-	i = 9;
-	//
+     init();
 
     //获取当前日期进行显示
     QDateTime dt;
     QDate date;
     dt.setDate(date.currentDate());
     QString currentDate = dt.toString("yyyy-MM-dd");
-	QString str = QString("%1日事项").arg(currentDate);
+	QString str = QString("%1").arg(currentDate);
 	myTitle->setText(str);
 
     NowUser.userName = "";
@@ -35,28 +29,53 @@ Widget::Widget(QWidget *parent)
 
     stlogOrshow = 1;
 
-	//点击登录
+
 	connect(mybtn, &QPushButton::clicked, [=]() {
-		if (stlogOrshow == 1)
-		{
-			userLogin();
-		}
-		else
-		{
-			userShowInf();
-		}
+        setting* mysetting=new setting(this);
+        mysetting->setModal(true);
+        mysetting->show();
+        connect(mysetting,&setting::send,[=](int ty){
+            if(ty==0)
+            {
+                mysetting->close();
+                if (stlogOrshow == 1)
+                {
+                    userLogin();
+                }
+                else
+                {
+                    userShowInf();
+                }
+            }
+            else
+            {
+                 QVector<DT_EVENUM> f(7);
+                 QVector<DT_EVENUM> s(7);
+                 QVector<DT_EVENUM> t(7);
+                 mysetting->close();
+                 QDateTime current_date_time = QDateTime::currentDateTime();
+                 myDb->getWeekNum(f,s,t,NowUser.userName,current_date_time);
+                 mychart=new barChart(this);
+                 mychart->set(f,s,t);
+                 mychart->show();
+
+            }
+
+        });
 
 		});
 
     //接收日期
     connect(myCalwidget, &Window::sendDayToMain, [&](QString str) {
         //数据库查询
-		QString s = QString("%1日事项").arg(str);
+		QString s = QString("%1").arg(str);
 		myTitle->setText(s);
         
+		
 
         nowEvent= myDb->searchNowDayData(NowUser.userName, str);
         myTodoWidget->SetBtnText(nowEvent);
+		myTodoWidget->clear();
 
         //用户选择日期
         
@@ -69,7 +88,7 @@ Widget::Widget(QWidget *parent)
 
         addEVeDlg *myShowEventDlg = new addEVeDlg(this);
         myShowEventDlg->setID(id);
-        myShowEventDlg->show();
+       
         if (id == -1)
         {
             //添加信息
@@ -93,7 +112,7 @@ Widget::Widget(QWidget *parent)
                  }
                  else
                  {
-                     //QMessageBox::information(this, "提示", "成功");
+
 					 myShowEventDlg->close();
                  }
             }
@@ -119,7 +138,7 @@ Widget::Widget(QWidget *parent)
 				QString qStr = dateTime.toString("yyyy-MM-dd hh:mm:ss");
 
 				QStringList list = qStr.split(" ");
-				QString str = QString("%1日事项").arg(list[0]);
+				QString str = QString("%1").arg(list[0]);
 				myTitle->setText(str);
 
 
@@ -132,7 +151,7 @@ Widget::Widget(QWidget *parent)
 
         //发送删除消息
         connect(myShowEventDlg, &addEVeDlg::sendDel, [=]() {
-            if (id!=1)
+            if (id!=-1)
             {
                bool st= myDb->deleteData(nowEvent[id]);
                if (st)
@@ -143,7 +162,7 @@ Widget::Widget(QWidget *parent)
 
 				   QStringList list = qStr.split(" ");
 				 
-				   QString str = QString("%1日事项").arg(list[0]);
+				   QString str = QString("%1").arg(list[0]);
 				   myTitle->setText(str);
 
 
@@ -155,7 +174,21 @@ Widget::Widget(QWidget *parent)
 
             });
 
+
+		
+
        
+        });
+	connect(myTodoWidget, &thingsWidget::sendStr, [=](QString str)
+		{
+			nowEvent = myDb->searchDataByName(NowUser.userName, str);
+			myTodoWidget->SetBtnText(nowEvent);
+			myTitle->setText(str + "查询结果");
+		});
+    connect(myTodoWidget, &thingsWidget::sendF, [=](int id) {
+        myFocus=new focus(this);
+		myFocus->set(nowEvent[id].EventTitle, nowEvent[id].BeginT, nowEvent[id].EndT, nowEvent[id].EventType);
+        myFocus->show();
         });
 
     //监视来自 显示日程信息的窗口
@@ -176,18 +209,37 @@ Widget::Widget(QWidget *parent)
 			QString qStr = dateTime.toString("yyyy-MM-dd hh:mm:ss");
 
 			QStringList list = qStr.split(" ");
-			QString str = QString("%1日事项").arg(list[0]);
+			QString str = QString("%1").arg(list[0]);
 			myTitle->setText(str);
 
 
 			nowEvent = myDb->searchNowDayData(NowUser.userName, list[0]);
 			myTodoWidget->SetBtnText(nowEvent);
-			mybtn->setText("用户");
+			//mybtn->setText("用户");
 		}
 	}
 
 
-	
+	connect(myTimer, &QTimer::timeout, [=]()
+		{
+			QString title;
+			int time;
+			int type;
+			todolist_ui_inf myret;
+			bool st=myDb->check(title, time, type,NowUser.userName,myret);
+			if (st)
+			{
+                this->show();                eveRemind=new eventRemind(this);
+				eveRemind->set(myret.EventTitle, myret.timeR,myret.EventType);
+				connect(eveRemind, &eventRemind::send,[=]() {
+					myTimer->start(1000);
+                    eveRemind->closeMusic();
+				});
+			    eveRemind->show();
+				myTimer->stop();
+
+			}
+		});
     
 
 }
@@ -195,23 +247,26 @@ Widget::Widget(QWidget *parent)
 bool Widget::trylast()
 {
 	QFile file("myFile.dat");
-	if (!file.open(QIODevice::ReadOnly))
-	{
-		return false;
-	}
-	QDataStream ds(&file);
-	ds >> NowUser.userName;
-	ds >> NowUser.password;
-	ds >> NowUser.userPetName;
-	ds >> NowUser.birthday;
-	ds >> NowUser.sex;
-	ds >> NowUser.byteArray;
-	ds >> NowUser.path;
-	ds >> NowUser.suffix;
-	ds >> NowUser.pixmap;
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        return false;
+    }
+    else
+    {
+        QDataStream ds(&file);
+        ds >> NowUser.userName;
+        ds >> NowUser.password;
+        ds >> NowUser.userPetName;
+        ds >> NowUser.birthday;
+        ds >> NowUser.sex;
+        ds >> NowUser.byteArray;
+        ds >> NowUser.path;
+        ds >> NowUser.suffix;
+        ds >> NowUser.pixmap;
+        file.close();
+        return true;
+    }
 
-	file.close();
-	return true;
 }
 
 //将str转换为Qdate
@@ -219,6 +274,31 @@ bool Widget::trylast()
 void Widget::init()
 {
    
+
+    mSysTrayIcon = new QSystemTrayIcon(this);
+    mSysTrayIcon->setIcon(QIcon(":/icon.png"));
+    mSysTrayIcon->setToolTip(QObject::trUtf8("ToDoList"));
+    mSysTrayIcon->show();
+
+
+    restoreAction = new QAction("显示", this);
+	connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+	quitAction = new QAction("退出", this);
+	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit())); //关闭应用
+
+	//创建托盘菜单
+	trayMenu = new QMenu(this);
+	
+	trayMenu->addAction(restoreAction);
+	trayMenu->addSeparator();
+	trayMenu->addAction(quitAction);
+	mSysTrayIcon->setContextMenu(trayMenu);
+
+	
+	connect(mSysTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
+
+
 
     this->setWindowIcon(QIcon(":/icon.png"));
     this->setFixedSize(1300, 900);
@@ -231,11 +311,10 @@ void Widget::init()
     myTodoWidget->move(700, 60);
 
     mybtn = new QPushButton(this);
-    mybtn->move(1200, 0);
-    mybtn->resize(100, 60);
+    mybtn->move(1240, 0);
+    mybtn->resize(60, 60);
 	QFont font0("楷体", 12, 20);
 	mybtn->setFont(font0);
-    mybtn->setText("登录");
 
     QString btnStyle2 =
         "QPushButton{\
@@ -259,6 +338,14 @@ void Widget::init()
                 padding:2px 4px; \
             }";
     mybtn->setStyleSheet(btnStyle2);
+	
+    mybtn->setIcon(QIcon(":/user.png"));
+	mybtn->setIconSize(QSize(60, 60));
+
+
+
+
+
 
 
 
@@ -273,26 +360,28 @@ void Widget::init()
 
     myTitle = new QPushButton(this);
     myTitle->move(700, 0);
-    myTitle->resize(500, 60);
-    QFont font("宋体", 18, 20);
+    myTitle->resize(540, 60);
+    QFont font("楷体", 18, 20);
     myTitle->setFont(font);
 	myTitle->setStyleSheet(btnStyle);
 
-	
-    
 
-      myDb=new mySqlConnect(this);
-      if(myDb->connect())
-      {
-           QMessageBox::information(this, "infor", "success");
-      }
-      else
-      {
-             QMessageBox::information(this, "infor", "fail");
-             //qDebug()<<"error open database because"<<db.lastError().text();
-      }
-     
-     
+    myDb = new mySqlConnect(this);
+    myTimer = new QTimer(this);
+    if (myDb->connect())
+    {
+        myTimer->start(2000);
+        myCalwidget->setNowdayStr(myDb->getQuotes());
+    }
+
+    timeSetStr=new QTimer(this);
+    timeSetStr->start(30000);
+
+    connect(timeSetStr,&QTimer::timeout,[=](){
+        myCalwidget->setNowdayStr(myDb->getQuotes());
+    });
+
+    
 }
 
 //登录部分
@@ -323,7 +412,7 @@ void Widget::userLogin()
 			if (isOk)
 			{
 
-				mybtn->setText("用户");
+				//mybtn->setText("用户");
 				stlogOrshow = 0;
 				NowUser = myUser;
 				userShowInf();
@@ -334,7 +423,7 @@ void Widget::userLogin()
 
 				QStringList list = qStr.split(" ");
 
-				QString str = QString("%1日事项").arg(list[0]);
+				QString str = QString("%1").arg(list[0]);
 				myTitle->setText(str);
                 
 
@@ -374,8 +463,48 @@ void Widget::userShowInf()
 	connect(showUserInf, &ShowInf::goingChangeUser, [=]()
 		{
 			showUserInf->close();
-			stlogOrshow = 1;
-			mybtn->clicked(true);
+			login* mylogin = new login(this);
+			//注册新用户
+			connect(mylogin, &login::sendlogon, [=]() {
+				userLogon();
+				mylogin->close();
+				});
+			connect(mylogin, &login::send, [=](QString name, QString password)
+				{
+
+
+					tabel_userInf myUser;
+					myUser.userName = name;
+					myUser.password = password;
+					bool isOk = myDb->login(myUser);
+					if (isOk)
+					{
+						stlogOrshow = 0;
+						NowUser = myUser;
+						userShowInf();
+						mylogin->close();
+
+						QDateTime dateTime(QDateTime::currentDateTime());
+						QString qStr = dateTime.toString("yyyy-MM-dd hh:mm:ss");
+
+						QStringList list = qStr.split(" ");
+
+						QString str = QString("%1").arg(list[0]);
+						myTitle->setText(str);
+
+
+
+						nowEvent = myDb->searchNowDayData(NowUser.userName, list[0]);
+						myTodoWidget->SetBtnText(nowEvent);
+					}
+					else
+					{
+						mylogin->errorPrompt();
+					}
+
+				});
+
+			mylogin->show();
 		});
 	//修改资料
 	connect(showUserInf, &ShowInf::goingChangeInf, [=]()
@@ -435,25 +564,52 @@ void Widget::userLogon()
 Widget::~Widget()
 {
     myDb->closeConnect();
-
 	QFile file("myFile.dat");
-	if (!file.open(QIODevice::WriteOnly))
+    if (file.open(QIODevice::WriteOnly))
 	{
-		return;
+        QDataStream ds(&file);
+        ds << NowUser.userName;
+        ds << NowUser.password;
+        ds << NowUser.userPetName;
+        ds << NowUser.birthday;
+        ds << NowUser.sex;
+        ds << NowUser.byteArray;
+        ds << NowUser.path;
+        ds << NowUser.suffix;
+        ds << NowUser.pixmap;
+        file.close();
 	}
-	QDataStream ds(&file);
-    ds << NowUser.userName;
-    ds << NowUser.password;
-    ds << NowUser.userPetName;
-    ds << NowUser.birthday;
-    ds << NowUser.sex;
-    ds << NowUser.byteArray;
-    ds << NowUser.path;
-    ds << NowUser.suffix;
-    ds << NowUser.pixmap;
-	
-    file.close();
-
     delete ui;
 }
+
+void Widget::closeEvent(QCloseEvent* event)
+{
+	if (mSysTrayIcon->isVisible())
+	{
+		hide(); //隐藏窗口
+		event->ignore(); //忽略事件
+	}
+}
+void Widget::hideEvent(QHideEvent* event)
+{
+	if (mSysTrayIcon->isVisible())
+	{
+		hide(); //隐藏窗口
+		event->ignore(); //忽略事件
+	}
+}
+void Widget::iconActivated(QSystemTrayIcon::ActivationReason ireason)
+{
+	switch (ireason)
+	{
+	case QSystemTrayIcon::Trigger:
+		this->showNormal();
+		break;
+	case QSystemTrayIcon::MiddleClick:
+		break;
+	default:
+		break;
+	}
+}
+
 

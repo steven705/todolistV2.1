@@ -9,7 +9,7 @@ DayLabel::DayLabel(QWidget* parent) :
     m_nDay = 0;
     labelIcon = new QLabel(this);
     labelIcon->setFixedSize(QSize(12, 12));
-    labelIcon->setPixmap(QPixmap("1.jpg"));   
+    labelIcon->setPixmap(QPixmap("1.jpg"));
     labelIcon->move(0, 0);
     labelIcon->setVisible(false);
 }
@@ -24,7 +24,7 @@ void DayLabel::setSelected(bool value)
     bSelect = value;
     QFont font("楷体", 20, 20);
     this->setFont(font);
-    this->setStyleSheet(QString("background: #ffffff; border: 1px solid red; border-radius: 2px"));
+    this->setStyleSheet(QString("background: #ffffff; border: 1px solid red; border-radius: 2px;border-radius:15px;"));
 }
 
 void DayLabel::setColor(const int& type)
@@ -77,7 +77,7 @@ void DayLabel::enterEvent(QEvent* e)
 
 	QFont font("楷体", 20, 20);
 	this->setFont(font);
-    this->setStyleSheet("background: #c8b9a6; border-top: 1px solid #c3c3c3; border-left: 1px solid #c3c3c3;");
+    this->setStyleSheet("background: #b0d5df; border-top: 1px solid red; border-left: 1px solid #c3c3c3;border-radius:15px;");
     QLabel::enterEvent(e);
 }
 
@@ -220,30 +220,32 @@ void CalendarWidget::initWidget()
     widgetTitle->setMinimumHeight(20);
 
 
-    QString btnStyle2 =
-        "QPushButton{\
+	QString btnStyle2 =
+		"QPushButton{\
                 color: rgb(255, 255, 255);\
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(166,164,208), stop:0.3 rgb(171,152,230), stop:1 rgb(152,140,220));\
                 border:1px;\
                 border-radius:5px; /*border-radius控制圆角大小*/\
-                padding:2px 4px;  \
+                padding:2px 4px;  \font: bold 10px;font-family: 楷体;font-size: 25px\
             }\
             QPushButton:hover{\
                 color: rgb(255, 255, 255); \
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(130,120,226), stop:0.3 rgb(120,130,230), stop:1 rgb(125,140,226));\
                 border:1px;  \
                 border-radius:5px; /*border-radius控制圆角大小*/\
-                padding:2px 4px; \
+                padding:2px 4px; \font: bold 10px;font-family: 楷体;font-size: 25px\
             }\
             QPushButton:pressed{    \
                 color: rgb(255, 255, 255); \
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(240,156,121), stop:0.3 rgb(220,160,140), stop:1 rgb(230,140,120));  \
                 border:1px;  \
                 border-radius:5px; /*border-radius控制圆角大小*/\
-                padding:2px 4px; \
+                padding:2px 4px; \font: bold 10px;font-family: 楷体;font-size: 25px\
             }";
     btnPrevMonth = new QPushButton(widgetTitle);
     btnPrevMonth->setText(tr("上月"));
+    btnPrevMonth->setMinimumHeight(50);
+    btnPrevMonth->setMinimumWidth(100);
     btnPrevMonth->setStyleSheet(btnStyle2);
 
     labelTitle = new QLabel(widgetTitle);
@@ -254,6 +256,8 @@ void CalendarWidget::initWidget()
      //btnNextMonth->resize(100,50);
     btnNextMonth = new QPushButton(widgetTitle);
     btnNextMonth->setText(tr("下月"));
+    btnNextMonth->setMinimumHeight(50);
+    btnNextMonth->setMinimumWidth(100);
     btnNextMonth->setStyleSheet(btnStyle2);
 
     horLayoutTitle = new QHBoxLayout(widgetTitle);
@@ -280,7 +284,7 @@ void CalendarWidget::initWidget()
         labelWeek[i] = new QLabel(widgetWeek);
         labelWeek[i]->setText(s_strWeek[i]);
         labelWeek[i]->setObjectName("labelWeek");
-        labelWeek[i]->setMinimumHeight(30);
+        labelWeek[i]->setMinimumHeight(60);
         labelWeek[i]->setAlignment(Qt::AlignCenter);
         if ((0 == (i % 7)) || (6 == (i % 7))) {
             labelWeek[i]->setProperty("weekend", true);
@@ -378,7 +382,7 @@ void CalendarWidget::initDate()
 
     // 显示当前天数
     if (m_nMonth == QDate::currentDate().month() && m_nYear == QDate::currentDate().year())
-        labelDay[m_nDay + nWeek - 1]->setColor(CURRENT_DAY);
+        labelDay[QDate::currentDate().day() + nWeek + 6]->setColor(CURRENT_DAY);
     // 发送更新信号
     Q_EMIT signalDayChanged();
 }

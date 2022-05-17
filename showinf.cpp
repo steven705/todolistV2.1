@@ -8,6 +8,14 @@ ShowInf::ShowInf(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Information");
     this->setFixedSize(600,900);
+
+	QPoint globalPos = parent->mapToGlobal(QPoint(0, 0));
+	int x = globalPos.x() + parent->width() - this->width();
+	int y = globalPos.y();
+	this->move(x, y);//窗口移动
+   
+
+
     name=new QLabel(this);
     nameShow=new QLabel(this);
     birthday=new QLabel(this);

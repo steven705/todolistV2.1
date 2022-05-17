@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #pragma execution_character_set("utf-8")
 #ifndef WIDGET_H
 #define WIDGET_H
@@ -17,6 +17,20 @@
 #include "addevedlg.h"
 #include <QDataStream>
 #include <QFile>
+#include<QMenu>
+#include<QMenuBar>
+#include"setting.h"
+#include<QTimer>
+#include"eventremind.h"
+#include<QCloseEvent>
+#include<QSystemTrayIcon>
+#include <QMenu>
+#include <QAction>
+#include <QThread>
+#include"barchart.h"
+#include"focus.h"
+
+
 
 
 QT_BEGIN_NAMESPACE
@@ -26,6 +40,12 @@ QT_END_NAMESPACE
 class Widget : public QWidget
 {
     Q_OBJECT
+
+protected:
+    void closeEvent(QCloseEvent* event);
+    void hideEvent(QHideEvent* event);
+public slots:
+    void iconActivated(QSystemTrayIcon::ActivationReason ireason);
 
 public:
     Widget(QWidget *parent = nullptr);
@@ -47,9 +67,29 @@ public:
 
 
 private:
+    focus* myFocus;
+
+    //系统托盘
+    QSystemTrayIcon *mSysTrayIcon;
+    QMenu* trayMenu;
+   
+    QAction* restoreAction;
+    QAction* quitAction;
+  
+
+
+    barChart* mychart;
+    //我的图表
+
+    eventRemind* eveRemind;
+    //时间提醒
+
+    QTimer * myTimer;
+
     Ui::Widget *ui;
 
-   
+
+
 
     //日历界面
     Window * myCalwidget;
@@ -83,6 +123,9 @@ private:
 	int stlogOrshow;
 
     QString logonName = "/o*&&-.+.*";
+
+
+    QTimer* timeSetStr;
 
 
    

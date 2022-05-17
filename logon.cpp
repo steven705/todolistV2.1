@@ -10,7 +10,7 @@ logon::logon(QWidget *parent) :QDialog(parent),
 void logon::init()
 {
 	nowSt = 0;
-    this->setWindowTitle("Logon");
+    this->setWindowTitle("Information");
 	this->setFixedSize(600, 940);
 
 	name = new QLabel(this);

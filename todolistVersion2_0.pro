@@ -1,3 +1,9 @@
+QT += charts
+
+CONFIG += resources_big
+
+
+QT       += multimedia
 QT       += core gui
 QT += sql
 win32-msvc* {
@@ -20,12 +26,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     addevedlg.cpp \
+    barchart.cpp \
     calendarwidget.cpp \
     date.cpp \
+    eventremind.cpp \
+    focus.cpp \
     login.cpp \
     logon.cpp \
     main.cpp \
     mysqlconnect.cpp \
+    setting.cpp \
     showinf.cpp \
     tdlcalendar.cpp \
     thingswidget.cpp \
@@ -33,12 +43,16 @@ SOURCES += \
 
 HEADERS += \
     addevedlg.h \
+    barchart.h \
     calendarwidget.h \
     date.h \
     dbType.h \
+    eventremind.h \
+    focus.h \
     login.h \
     logon.h \
     mysqlconnect.h \
+    setting.h \
     showinf.h \
     tdlcalendar.h \
     thingswidget.h \
@@ -46,8 +60,12 @@ HEADERS += \
 
 FORMS += \
     addevedlg.ui \
+    barchart.ui \
+    eventremind.ui \
+    focus.ui \
     login.ui \
     logon.ui \
+    setting.ui \
     showinf.ui \
     thingswidget.ui \
     widget.ui
@@ -59,3 +77,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     res.qrc
+
+RC_ICONS = title.ico

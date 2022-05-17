@@ -3,9 +3,14 @@
 #include<QString>
 #include<QPixmap>
 #include <QByteArray>
+#include<QDate>
 using namespace std;
 
-
+struct DT_EVENUM
+{
+    QDateTime day;
+    int num;
+};
 
 //这个是从ui获得的信息
 //就是用户输入的信息 用户输入了开始日期和结束日期 我们就要对其拆分 一天一天存储
@@ -21,6 +26,7 @@ struct todolist_ui_inf
     int EventType;
     QString EventTitle;
     QString Note;
+    int timeR;
 
 };
 
@@ -35,6 +41,7 @@ struct tabel_infToDoList
     int EventType;
     QString EventTitle;
     QString Note;
+    int timeR;
 
 };
 
@@ -53,6 +60,7 @@ struct tabel_userInf
     QString suffix;      //头像图片的后缀
     QPixmap pixmap;     
     QByteArray byteArray;
+    QByteArray songByte;
 
 };
 

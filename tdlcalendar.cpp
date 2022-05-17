@@ -1,4 +1,4 @@
-﻿#include "TDLCalendar.h"
+#include "TDLCalendar.h"
 
 
 Window::Window(QWidget* parent) :
@@ -30,70 +30,101 @@ void Window::initWidget()
     widgetRight->setObjectName("widgetRight");
     widgetRight->setMinimumSize(160, 100);
 
-    labelShowToday = new QLabel(widgetRight);
-    labelShowYear = new QLabel(widgetRight);
-    labelShowWeek = new QLabel(widgetRight);
+    //labelShowToday = new QLabel(widgetRight);
+    //labelShowYear = new QLabel(widgetRight);
+    //labelShowWeek = new QLabel(widgetRight);
     labelShowDay = new QLabel(widgetRight);
     labelShowNYear = new QLabel(widgetRight);
     labelShowLunarDate = new QLabel(widgetRight);
-    labelSpacer = new QLabel(widgetRight);
-    ls2 = new QLabel(widgetRight);
-    Ly = new QLabel(widgetRight);
-    Lj = new QLabel(widgetRight);
+    //labelSpacer = new QLabel(widgetRight);
+    //ls2 = new QLabel(widgetRight);
+    //Ly = new QLabel(widgetRight);
+    //Lj = new QLabel(widgetRight);
+    labelOneNoteEveryDay = new QLabel;
 
-    labelShowToday->setAlignment(Qt::AlignCenter);
-    labelShowYear->setAlignment(Qt::AlignCenter);
-    labelShowWeek->setAlignment(Qt::AlignCenter);
+    //labelShowToday->setAlignment(Qt::AlignCenter);
+    //labelShowYear->setAlignment(Qt::AlignCenter);
+    //labelShowWeek->setAlignment(Qt::AlignCenter);
+
     labelShowDay->setAlignment(Qt::AlignCenter);
     labelShowNYear->setAlignment(Qt::AlignCenter);
     labelShowLunarDate->setAlignment(Qt::AlignCenter);
     //ls2->setAlignment(Qt::AlignCenter);
-    Ly->setAlignment(Qt::AlignCenter);
-    Lj->setAlignment(Qt::AlignCenter);
-    labelSpacer->setFixedSize(widgetRight->width(), 2);
-    ls2->setFixedSize(widgetRight->width(), 2);
+    //Ly->setAlignment(Qt::AlignCenter);
+    //Lj->setAlignment(Qt::AlignCenter);
+    labelShowLunarDate->setAlignment(Qt::AlignCenter);
+    labelOneNoteEveryDay->setAlignment(Qt::AlignVCenter);
+    //labelSpacer->setFixedSize(widgetRight->width(), 2);
+    //ls2->setFixedSize(widgetRight->width(), 2);
 
-    labelShowToday->setObjectName("labelCommon");
-    labelShowWeek->setObjectName("labelCommon");
-    labelShowYear->setObjectName("labelCommon");
+    //labelShowToday->setObjectName("labelCommon");
+    //labelShowWeek->setObjectName("labelCommon");
+    //labelShowYear->setObjectName("labelCommon");
     labelShowDay->setObjectName("labelShowDay");
-    Ly->setObjectName("labelyiji");
-    Lj->setObjectName("labelyiji");
+    //Ly->setObjectName("labelyiji");
+    //Lj->setObjectName("labelyiji");
+    labelOneNoteEveryDay->setObjectName("labelyiji");
     labelShowNYear->setObjectName("labelCommon");
     labelShowLunarDate->setObjectName("labelCommon");
-    labelSpacer->setObjectName("labelSpacer");
-    ls2->setObjectName("labelSpacer");
+    //labelSpacer->setObjectName("labelSpacer");
+    //ls2->setObjectName("labelSpacer");
 
-    labelShowToday->setText(QDateTime::currentDateTime().toString("yyyy 年 MM 月 dd日"));
-    labelShowYear->setText(QDateTime::currentDateTime().toString("yyyy 年"));
-    labelShowWeek->setText(QDate::currentDate().toString("ddd"));
+    //labelShowToday->setText(QDateTime::currentDateTime().toString("yyyy 年 MM 月 dd日"));
+    //labelShowYear->setText(QDateTime::currentDateTime().toString("yyyy 年"));
+    //labelShowWeek->setText(QDate::currentDate().toString("ddd"));
     labelShowDay->setText(QDate::currentDate().toString("MM"));
-    Ly->setText(QString("宜：%1").arg("Code"));
-    Lj->setText(QString("忌：%1").arg("Sleep"));
+    //Ly->setText(QString("宜：%1").arg("Code"));
+    //Lj->setText(QString("忌：%1").arg("Sleep"));
+
+
+
+    //将其分行
+//    QStringList list = nowDaystr.split(" ");
+//    QString str="";
+//    int size = 0;
+//    for (int i = 0; i < list.size(); i++)
+//    {
+//		if (size + list[i].size() <= 27)
+//		{
+//			str = str + list[i] + " ";
+//			size += list[i].size() + 1;
+//		}
+//		else
+//		{
+//			str = str + "\n";
+//			i--;
+//			size = 0;
+//		}
+//    }
+//	labelOneNoteEveryDay->setText(str);
+	labelOneNoteEveryDay->setFixedWidth(calendar->width());
 
     verlayoutWidgetRight = new QHBoxLayout(widgetRight);
     H1 = new QVBoxLayout(widgetRight);
-    H1->addWidget(labelShowYear, 0, Qt::AlignLeft | Qt::AlignTop);
-    H1->addWidget(labelShowNYear, 0, Qt::AlignLeft | Qt::AlignTop);
-    H1->addStretch();
+    //H1->addWidget(labelShowYear, 0, Qt::AlignLeft | Qt::AlignTop);
+    //H1->addWidget(labelShowNYear, 0, Qt::AlignLeft | Qt::AlignTop);
+    //H1->addStretch();
     H2 = new QVBoxLayout(widgetRight);
-    H2->addStretch();
-    H2->addWidget(labelShowWeek, 0, Qt::AlignLeft | Qt::AlignTop);
     //H2->addStretch();
-    H2->addWidget(labelSpacer, 0, Qt::AlignLeft | Qt::AlignBottom);
-    H2->addWidget(labelShowToday, 0, Qt::AlignLeft | Qt::AlignBottom);
+    H2->addWidget(labelShowDay, 0, Qt::AlignLeft | Qt::AlignBottom);
+    H2->addWidget(labelShowNYear, 0, Qt::AlignLeft | Qt::AlignBottom);
+    //H2->addWidget(labelShowWeek, 0, Qt::AlignLeft | Qt::AlignTop);
+    //H2->addStretch();
+    //H2->addWidget(labelSpacer, 0, Qt::AlignLeft | Qt::AlignCenter);
+    //H2->addWidget(labelShowToday, 0, Qt::AlignLeft | Qt::AlignBottom);
     H2->addWidget(labelShowLunarDate, 0, Qt::AlignLeft | Qt::AlignBottom);
 
     H3 = new QVBoxLayout(widgetRight);
-    H3->addWidget(Ly, 0, Qt::AlignCenter);
-    H3->addWidget(ls2, 0, Qt::AlignCenter);
-    H3->addWidget(Lj, 0, Qt::AlignCenter);
+    //H3->addWidget(Ly, 0, Qt::AlignCenter);
+    //H3->addWidget(ls2, 0, Qt::AlignCenter);
+    //H3->addWidget(Lj, 0, Qt::AlignCenter);
+    H3->addWidget(labelOneNoteEveryDay, 0, Qt::AlignCenter);
     verlayoutWidgetRight->setContentsMargins(0, 0, 0, 0);
-    verlayoutWidgetRight->setSpacing(15);
-    verlayoutWidgetRight->addWidget(labelShowDay);//月份
-    verlayoutWidgetRight->addLayout(H1);
-    verlayoutWidgetRight->addLayout(H2);
-    verlayoutWidgetRight->addLayout(H3);
+    verlayoutWidgetRight->setSpacing(5);
+    //verlayoutWidgetRight->addWidget(labelShowDay, 1);//月份
+    //verlayoutWidgetRight->addLayout(H1);
+    verlayoutWidgetRight->addLayout(H2, 1);
+    verlayoutWidgetRight->addLayout(H3, 3);
 
 
     //verlayoutWidgetRight->addWidget(labelShowYear);
@@ -118,9 +149,9 @@ void Window::initWidget()
     labelMonthJump = new QLabel(groupBoxBottom);
     labelDayJump = new QLabel(groupBoxBottom);
 
-    labelYearJump->setMinimumWidth(20);
-    labelMonthJump->setMinimumWidth(20);
-    labelDayJump->setMinimumWidth(20);
+    labelYearJump->setMinimumWidth(50);
+    labelMonthJump->setMinimumWidth(50);
+    labelDayJump->setMinimumWidth(50);
 
     labelYearJump->setObjectName("labelCommon");
     labelMonthJump->setObjectName("labelCommon");
@@ -153,21 +184,21 @@ void Window::initWidget()
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(166,164,208), stop:0.3 rgb(171,152,230), stop:1 rgb(152,140,220));\
                 border:1px;\
                 border-radius:5px; /*border-radius控制圆角大小*/\
-                padding:2px 4px;  \
+                padding:2px 4px;  \font: bold 10px;font-family: 楷体;font-size: 25px\
             }\
             QPushButton:hover{\
                 color: rgb(255, 255, 255); \
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(130,120,226), stop:0.3 rgb(120,130,230), stop:1 rgb(125,140,226));\
                 border:1px;  \
                 border-radius:5px; /*border-radius控制圆角大小*/\
-                padding:2px 4px; \
+                padding:2px 4px; \font: bold 10px;font-family: 楷体;font-size: 25px\
             }\
             QPushButton:pressed{    \
                 color: rgb(255, 255, 255); \
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(240,156,121), stop:0.3 rgb(220,160,140), stop:1 rgb(230,140,120));  \
                 border:1px;  \
                 border-radius:5px; /*border-radius控制圆角大小*/\
-                padding:2px 4px; \
+                padding:2px 4px; \font: bold 10px;font-family: 楷体;font-size: 25px\
             }";
     //设置样式
 
@@ -175,6 +206,7 @@ void Window::initWidget()
     btnDateJump->setStyleSheet(btnStyle2);
    // btnDateJump->resize(100, 50);
     btnToday = new QPushButton(groupBoxBottom);
+    btnDateJump->setMinimumHeight(50);
     btnToday->setStyleSheet(btnStyle2);
     
     //设置样式
@@ -183,6 +215,7 @@ void Window::initWidget()
 
     horLayoutJump = new QHBoxLayout(groupBoxBottom);
     horLayoutJump->setSpacing(10);
+    btnToday->setMinimumHeight(50);
     horLayoutJump->addWidget(labelYearJump);
     horLayoutJump->addWidget(editYearJump);
 
@@ -206,7 +239,11 @@ void Window::initWidget()
     horLayoutWidget->addWidget(widgetRight, 1);
     //horLayoutWidget->addWidget(calendar, 3, Qt::AlignCenter);
     verLayoutAll->addLayout(horLayoutWidget, 0);
+    
+
+    //verLayoutAll->addWidget(labelOneNoteEveryDay, 1);
     verLayoutAll->addWidget(groupBoxBottom, 0);
+
     verLayoutAll->addWidget(calendar, 0);
     verLayoutAll->setStretchFactor(widgetRight, 1);
     verLayoutAll->setStretchFactor(calendar, 3);
@@ -232,20 +269,20 @@ void Window::initStyle()
     //背景颜色
     strStyle += QString(".Window {background:rgb(152,140,220);}");
 
-    strStyle += QString(".DayLabel{font: 100px; font-family: 楷体;}");
+    strStyle += QString(".DayLabel{font-size: 20px; font-family: 楷体;}");
     strStyle += QString("QWidget#widgetCalendar{ background-color: white;}");
     
 
     //
     strStyle += QString("QWidget#widgetTitle{ background-color#497568;}");//#c8b9a6
     strStyle += QString("QWidget#widgetWeek{ background-color: #efefef;}");
-    strStyle += QString("QLabel#labelTitle {border: none; font: bold 18px;}");
-    strStyle += QString("QLabel#labelWeek {border-top: 1px solid #c3c3c3; border-left: 1px solid #c3c3c3; font: bold 12px;}");
+    strStyle += QString("QLabel#labelTitle {border: none; font: bold 28px;font-family: 华文楷体;}");
+    strStyle += QString("QLabel#labelWeek { background-color  #7a7374; font: bold 25px;font-family: 华文楷体;}");
     strStyle += QString("QLabel#labelDay[weekend=true],QLabel#labelWeek[weekend=true]{color: red;}");
-    strStyle += QString("QLabel#labelDay {border-top: 1px solid #c3c3c3; border-left: 1px solid #c3c3c3; font-size: 14px;}");
+    strStyle += QString("QLabel#labelDay {border-top: 1px solid #c3c3c3; border-left: 1px solid #c3c3c3; font-size: 20px;border-radius:15px;}");
     strStyle += QString("QLabel#labelShowDay {color: yellow; font: bold 64px;}");
     strStyle += QString("QLabel#labelyiji {color: yellow; font: bold 32px;}");
-    strStyle += QString("QLabel#labelCommon {color: #ffffff;}");
+    strStyle += QString("QLabel#labelCommon {color: #ffffff;font: bold 18px;font-family: 楷体;font-size: 25px}");
     strStyle += QString("QLabel#labelSchedule {color: #ffffff; border: 1px solid #ffffff;}");
     strStyle += QString("QLabel#labelSpacer {border: 1px solid #ffffff;}");
     strStyle += QString("QLineEdit {border: 1px solid #ffffff; border-radius: 5px; font-size: 20px;}");
@@ -263,15 +300,15 @@ void Window::sltDayClicked(int nday)
 {
     //labelShowDay->setText(QString("%1").arg(nday, 2, 10, QChar('0')));
     labelShowDay->setText(QString("%1月").arg(calendar->month()));
-    labelShowToday->setText(QString("%1 年 %2 月 %3日").arg(QString::number(calendar->year()), QString::number(calendar->month()), QString::number(nday)));
-    labelShowYear->setText(QString("%1 年").arg(QString::number(calendar->year())));
+    //labelShowToday->setText(QString("%1 年 %2 月 %3日").arg(QString::number(calendar->year()), QString::number(calendar->month()), QString::number(nday)));
+    //labelShowYear->setText(QString("%1 年").arg(QString::number(calendar->year())));
     qDebug() << calendar->month();
-    labelShowWeek->setText(Week_myf[(nday +
-        Date::getFirstDayOfWeek(calendar->year(), calendar->month()) - 1) % 7]);
+    //labelShowWeek->setText(Week_myf[(nday +
+        //Date::getFirstDayOfWeek(calendar->year(), calendar->month()) - 1) % 7]);
     qDebug() << calendar->day();
     // 显示农历
     QString strLunar = Date::getLunarMonAndDay(calendar->year(), calendar->month(), nday);
-    labelShowLunarDate->setText(tr("农历  %1").arg(strLunar));
+    labelShowLunarDate->setText(tr("农历%1").arg(strLunar));
     /*QString strLunar = Date::getLunarMonAndDay(year, month, day);
     labelShowLunarDate->setText(tr("农历  %1").arg(strLunar));*/
 }
@@ -286,7 +323,7 @@ void Window::sltDayChanged()
         Date::getFirstDayOfWeek(calendar->year(), calendar->month()) - 1) % 7]);*/
     // 显示农历
     QString strLunar = Date::getLunarMonAndDay(calendar->year(), calendar->month(), calendar->day());
-    labelShowLunarDate->setText(tr("农历  %1").arg(strLunar));
+    labelShowLunarDate->setText(tr("农历%1").arg(strLunar));
     labelShowNYear->setText(Date::getLunarTime(calendar->year()));
 }
 

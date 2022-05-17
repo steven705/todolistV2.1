@@ -50,10 +50,19 @@
     <ClCompile Include="addevedlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="barchart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="calendarwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="date.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="eventremind.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="focus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="login.cpp">
@@ -66,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mysqlconnect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="setting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="showinf.cpp">
@@ -85,6 +97,9 @@
     <QtMoc Include="addevedlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="barchart.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="calendarwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -94,6 +109,12 @@
     <ClInclude Include="dbType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <QtMoc Include="eventremind.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="focus.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="login.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -101,6 +122,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="mysqlconnect.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="setting.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="showinf.h">
@@ -117,6 +141,12 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
+    
+    
+    
+    
+    
+    
     
     
     
@@ -151,15 +181,33 @@
     
     
     
+    
+    
+    
+    
+    
+    
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="addevedlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="barchart.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="eventremind.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="focus.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="login.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="logon.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="setting.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="showinf.ui">
@@ -173,11 +221,20 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Dewdrops.wav">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="icon.png">
       <Filter>Resource Files</Filter>
     </None>
     <QtRcc Include="res.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+    <None Include="user.png">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="D:\todolistVersion2_2\todolistVersion2_0_resource.rc" />
   </ItemGroup>
 </Project>

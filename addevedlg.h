@@ -19,6 +19,7 @@
 #include<QTimeEdit>
 #include <QMessageBox>
 
+
 namespace Ui {
 class addEVeDlg;
 }
@@ -41,6 +42,19 @@ public:
 	void setID(int i)
 	{
 		this->id = i;
+
+
+		bdt->setDate(QDate::currentDate());
+		edt->setDate(QDate::currentDate());
+
+        QDateTime curDateTime=QDateTime::currentDateTime();
+        QString str=curDateTime.toString("yyyy-MM-dd hh:mm:ss");
+        QStringList list=str.split(" ");
+        QStringList list1=list[1].split(":");
+        QTime t1(list1[0].toInt(),list1[1].toInt());
+        QTime t2=t1.addSecs(7200);
+        bt->setTime(t1);
+        et->setTime(t2);
 	}
 
 signals:
@@ -57,6 +71,11 @@ public slots:
     void on_back_clicked();
 
 private:
+
+    int remindT;
+
+
+
     Ui::addEVeDlg *ui;
 
     QLabel* titel;
@@ -65,6 +84,7 @@ private:
     QLabel* t;
     QLabel* shixiangleixing;
     QLabel* beizhu1;
+    QLabel* tixing;
     QLineEdit* namer;
     QComboBox* evevtType;
     QDateEdit* bdt;
@@ -72,6 +92,7 @@ private:
     QTimeEdit* bt;
     QTimeEdit* et;
     QLineEdit* beizhur;
+    QComboBox* tixingType;
 
     QPushButton* queding;
     QPushButton* shanchu;

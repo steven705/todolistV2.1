@@ -8,6 +8,9 @@ login::login(QWidget *parent) :
     ui->setupUi(this);
      this->setWindowTitle("Login");
 
+	
+
+
 
 
 	QString btnStyle1 =

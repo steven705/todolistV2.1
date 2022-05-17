@@ -7,29 +7,44 @@ thingsWidget::thingsWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::thingsWidget)
 {
+   
     ui->setupUi(this);
+
+    myed = new QLineEdit(this);
     this->resize(600,840);
     scene = new QGraphicsScene;
+    QFont font0("楷体", 20, 20);
+    myed->setFont(font0);
+    myed->setStyleSheet("border-width:0;");
+    connect(myed, &QLineEdit::returnPressed, [=]() {
+        if(myed->text()!="") emit sendStr(myed->text());
+        });
+    myed->resize(600, 50);
+    myed->move(0, 0);
     ui->graphicsView->setScene(scene);
-    ui->graphicsView->resize(600, 840);
-    ui->graphicsView->move(0, 0);
+    ui->graphicsView->resize(600, 790);
+    ui->graphicsView->move(0, 50);
     ui->graphicsView->setStyleSheet("padding:0px;border:0px");
     // 将部件添加到布局管理器中
     layout = new QGraphicsLinearLayout;
     layout->setOrientation(Qt::Vertical);
 
     QFont font1("宋体", 15, 10);
-    for (int i = 0; i < EventMaxNum; i++) {
+    for (int i = 0; i < EventMaxNum; i++)
+    {
         MyPushButton* btn = new MyPushButton;
         // 设置大小
         btn->setFont(font1);
         btn->setFixedSize(this->width() - 70, this->height() / 10);
+        btn->move(35,(this->height() / 10 + 5) * i);
         QGraphicsProxyWidget* pushButtonProxy = scene->addWidget(btn);//添加到场景中
         layout->addItem((QGraphicsWidget*)pushButtonProxy);//添加到布局当中
         vec_btn.push_back(btn);// 添加到vec_btn中，管理
         btn->setText(QString::number(i + 1));
         btn->setmyID(i);
-        connect(btn, &MyPushButton::clicked, this, &thingsWidget::sendClickedToMain);
+        //connect(btn, &MyPushButton::clicked, this, &thingsWidget::sendClickedToMain);
+         connect(btn, &MyPushButton::leftClicked, this, &thingsWidget::sendClickedToMain);
+         connect(btn, &MyPushButton::rightClicked, this, &thingsWidget::sendClickedToMain2);
     }
    
     // 创建图形部件，设置其为一个顶层窗口，然后在其上应用布局
@@ -71,6 +86,7 @@ thingsWidget::thingsWidget(QWidget *parent)
     ui->pushButton->setStyleSheet(btnStyle2);
     connect(ui->pushButton, &QPushButton::clicked,
         this, &thingsWidget::on_pushButton_clicked);
+
 }
 
 void thingsWidget::SetBtnText(const QVector<todolist_ui_inf>& SerchEvent) {
@@ -190,4 +206,8 @@ void thingsWidget::on_pushButton_clicked()
 void thingsWidget::sendClickedToMain() {
     MyPushButton* tmp = (MyPushButton*)sender();
     emit send(tmp->getmyID());
+}
+void thingsWidget::sendClickedToMain2() {
+    MyPushButton* tmp = (MyPushButton*)sender();
+    emit sendF(tmp->getmyID());
 }

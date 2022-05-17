@@ -1,4 +1,4 @@
-﻿#include "addevedlg.h"
+#include "addevedlg.h"
 #include "ui_addevedlg.h"
 
 addEVeDlg::addEVeDlg(QWidget *parent) :
@@ -7,7 +7,9 @@ addEVeDlg::addEVeDlg(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Event");
+    //this->setStyleSheet("background-color:#D3B1FC;");
 
+    remindT=-1;
 	titel=new QLabel(this);
 	name=new QLabel(this);
 	dt=new QLabel(this);
@@ -23,6 +25,10 @@ addEVeDlg::addEVeDlg(QWidget *parent) :
 	beizhu1->setText("备注:");
 	beizhur = new QLineEdit(this);
 
+    tixing=new QLabel(this);
+    tixingType=new QComboBox(this);
+
+
 	queding = new QPushButton(this);
 	shanchu = new QPushButton(this);
 
@@ -32,10 +38,31 @@ addEVeDlg::addEVeDlg(QWidget *parent) :
 	dt->setText("起止日期:");
 	t->setText("起止时间:");
 	shixiangleixing->setText("事项类型");
+    tixing->setText("分钟前提醒我");
 
 	evevtType->addItem("high");
 	evevtType->addItem("middle");
 	evevtType->addItem("low");
+    tixingType->addItem("");
+    tixingType->addItem("0");
+	tixingType->addItem("1");
+	tixingType->addItem("2"); 
+	tixingType->addItem("3");
+	tixingType->addItem("4");
+    tixingType->addItem("5");
+    tixingType->addItem("6");
+    tixingType->addItem("7");
+    tixingType->addItem("8");
+    tixingType->addItem("9");
+    tixingType->addItem("10");
+    tixingType->addItem("15");
+    tixingType->addItem("20");
+    tixingType->addItem("25");
+    tixingType->addItem("30");
+    tixingType->addItem("40");
+    tixingType->addItem("50");
+    tixingType->addItem("60");
+
 
 
 	bdt->setDisplayFormat("yyyy-MM-dd");
@@ -50,7 +77,7 @@ addEVeDlg::addEVeDlg(QWidget *parent) :
 
 
 	///开始设置布局
-	this->setFixedSize(760, 680);
+    this->setFixedSize(760, 770);
 
 
 	QFont font("华文行楷", 17, 15);
@@ -85,6 +112,14 @@ addEVeDlg::addEVeDlg(QWidget *parent) :
 	et->resize(200, 50);
 	bt->setFont(font2);
 	et->setFont(font2);
+
+    tixing->setFont(font);
+    tixingType->setFont(font2);
+    tixing->resize(350,50);
+    tixing->move(480,580);
+    tixingType->resize(100,50);
+    tixingType->move(370,580);
+
 
 
 	shixiangleixing->resize(150, 50);
@@ -121,8 +156,8 @@ addEVeDlg::addEVeDlg(QWidget *parent) :
 	queding->resize(200, 50);
 	shanchu->resize(200, 50);
 
-	queding->move(150, 580);
-	shanchu->move(400, 580);
+    queding->move(150, 660);
+    shanchu->move(400, 660);
 
 
 	QString btnStyle2 =
@@ -154,11 +189,8 @@ addEVeDlg::addEVeDlg(QWidget *parent) :
 	shanchu->setFont(font);
 
 
-	bdt->setDate(QDate::currentDate());
-	edt->setDate(QDate::currentDate());
 
-	bt->setTime(QTime::currentTime());
-	et->setTime(QTime::currentTime());
+	
 
 
 	
@@ -191,12 +223,12 @@ void addEVeDlg::set(todolist_ui_inf info)
     bdt->setDate(date1);
 	QStringList l2 = info.EndDT.split("-");
 	QDate date2(l2[0].toInt(), l2[1].toInt(), l2[2].toInt());
-	edt->setDate(date1);
+	edt->setDate(date2);
 	QStringList l3 = info.BeginT.split(":");
-	QTime time3(l3[0].toInt(), l3[1].toInt(), l3[2].toInt());
+    QTime time3(l3[0].toInt(), l3[1].toInt(), l3[2].toInt());
 	bt->setTime(time3);
-	QStringList l4 = info.BeginT.split(":");
-	QTime time4(l4[0].toInt(), l4[1].toInt(), l4[2].toInt());
+	QStringList l4 = info.EndT.split(":");
+    QTime time4(l4[0].toInt(), l4[1].toInt(), l4[2].toInt());
 	et->setTime(time4);
 
 	if (info.EventType==3)
@@ -213,6 +245,15 @@ void addEVeDlg::set(todolist_ui_inf info)
 	}
 
 	beizhur->setText(info.Note);
+
+	if (info.timeR == -1)
+	{
+		tixingType->setCurrentText("");
+	}
+	else
+	{
+		tixingType->setCurrentText(QString::number(info.timeR));
+	}
 
 	
 }
@@ -270,6 +311,15 @@ void addEVeDlg::on_ok_clicked()
 	}
 
 	tmp.Note = beizhur->text();
+
+    if(tixingType->currentText()!="")
+    {
+        tmp.timeR=tixingType->currentText().toInt();
+    }
+	else
+	{
+		tmp.timeR = -1;
+	}
 
 	if (QMessageBox::Yes == QMessageBox::question(this, "提示", "您确定保存吗？", QMessageBox::Yes | QMessageBox::No))
 	{
